@@ -1,31 +1,69 @@
 import {useState, useEffect, useCallback} from 'react';
-import words from "./wordList.json"
 import { HangmanDrawing } from './HangmanDrawing';
 import { HangmanWord } from './HangmanWord';
 import { Keyboard } from './Keyboard';
+import { Dictionary } from './Dictionary';
+import type { DictionaryResponse } from './Dictionary';
 import HangmanTextField from './HangmanTextField';
 import "./App.css"
 
+const BASE_URL = 'https://random-word-api.herokuapp.com';
+const DICTIONARY_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en';
 
-function getWord() {
-    return words[Math.floor(Math.random() * words.length)]
-}
-
+function api<T>(url: string): Promise<T> {
+    return fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText)
+        }
+        return response.json() as Promise<T>
+      })
+  }
 
 function App() {
 
-    const[wordToGuess, setWordToGuess] = useState(() => {
-        return words[Math.floor(Math.random() * words.length)].toLowerCase()
+    // const[wordToGuess, setWordToGuess] = useState(() => {
+        // return words[Math.floor(Math.random() * words.length)].toLowerCase()
         // math.random gives 0 and 1, times the number of words, then floor
         // this will give an index.
         // toLowerCase() is what I needed.
-    });
+    //     return api(BASE_URL + '/word')
+    // });
+
+    const [definitionData, setDefinitionData] = useState<DictionaryResponse | null>(null)
+    const[wordToGuess, setWordToGuess] = useState<string>(" ")
 
     const [guessedLetters, setGuessedLetters] = useState<string[]>([])
-
     const [textGuess, setTextGuess] = useState<string | undefined>()
-
     const [finalGuess, setFinalGuess] = useState<string>("")
+
+    const fetchData = useCallback(async () => {
+    
+        // fetch the word
+        const fetchNewWord = async () => {
+            try {
+                setGuessedLetters([])
+                setFinalGuess("")
+                setTextGuess("")
+                const data = await api<string[]>(BASE_URL + '/word')
+                const word = data[0].toLowerCase()
+                setWordToGuess(word)
+                console.log(word)
+                const dictData = await api<DictionaryResponse[]>(DICTIONARY_URL + `/${word}`)
+                setDefinitionData(dictData[0])
+                console.log(dictData[0])
+            } catch (error) {
+                console.error("API failure")
+            }
+        }
+        fetchNewWord()
+      }, [])
+      // you need this when converting from non-callback to callback
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+    // once on mount
 
     const [isFieldActive, setIsFieldActive] = useState(false);
 
@@ -74,7 +112,7 @@ function App() {
             if (key != "Enter") return
 
             e.preventDefault()
-            setWordToGuess(getWord())
+            fetchData()
         }
 
         document.addEventListener("keypress", handler)
@@ -147,6 +185,7 @@ function App() {
             console.log("active!")}}
         onBlur={() => setIsFieldActive(false)}/>
         <button onClick={handleGuess} className= "btn">Make Guess</button>
+        <Dictionary reveal = {isLoser || isWinner} data={definitionData} />
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import styles from "./HangmanTextField.module.css"
+import styles from "./css/HangmanTextField.module.css"
 
 interface TextFieldProps {
   value: string;

@@ -1,4 +1,4 @@
-import styles from "./Keyboard.module.css"
+import styles from "./css/Keyboard.module.css"
 
 const KEYS = [
     "a",
@@ -55,6 +55,7 @@ export function Keyboard({ activeLetters, disabled = false, inactiveLetters, add
                     // that was the bug. react is case sensitive.
                     // the syntax here is god awful.
                     // oh my god it's even case sensitive.
+                    // I get it it's referencing dynamic values like JS
             disabled= {isInactive || isActive || disabled}
             
             key = {key}>{key}</button>
