@@ -158,7 +158,7 @@ function App() {
             overflowX: "hidden",
         }}>
             <div style={{
-                maxWidth: "800px",
+                minWidth: "800px",
                 display: "flex",
                 flexDirection: "column",
                 gap: "2rem",
