@@ -150,12 +150,13 @@ function App() {
 
     return (
         <div style = {{
-            maxWidth: "800px",
+            maxHeight: "100vh",
             display: "flex",
             flexDirection: "column",
             gap: "2rem",
             margin: "0 auto",
-            alignItems: "center"
+            alignItems: "center",
+            transform: "scale(0.75)",
         }}
     >
         <div style = {{
