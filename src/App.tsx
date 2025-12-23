@@ -142,7 +142,7 @@ function App() {
                 addGuessedLetter={addGuessedLetter}
             />
         </div>
-        <HangmanTextField value={textGuess ?? ""}onChange={setTextGuess}
+        <HangmanTextField value={textGuess?.toLowerCase() ?? ""}onChange={setTextGuess}
         onFocus={() => {setIsFieldActive(true)
             console.log("active!")}}
         onBlur={() => setIsFieldActive(false)}/>
