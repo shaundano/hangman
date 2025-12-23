@@ -149,47 +149,59 @@ function App() {
     // using the keys, does it work
 
     return (
-        <div style = {{
-            maxHeight: "100vh",
-            display: "flex",
-            flexDirection: "column",
-            gap: "2rem",
-            margin: "0 auto",
-            alignItems: "center",
-            transform: "scale(0.75)",
-        }}
-    >
-        <div style = {{
-            fontSize: "2rem",
-            textAlign: "center"
-        }}>
-            {isWinner && "Winner! - Refresh to try again"}
-            {isLoser && "Nice try - Refresh to try again"}
-        </div>
-
-        <HangmanDrawing numberOfGuesses={incorrectLetters.length}/>
-        <HangmanWord reveal={isLoser}guessedLetters={guessedLetters} wordToGuess={wordToGuess} />
         <div style={{
-            alignSelf: "stretch"
+            width: "100%",
+            minHeight: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-start",
+            overflowX: "hidden",
         }}>
-            <Keyboard
-                disabled={isWinner || isLoser}
-                activeLetters = {guessedLetters.filter(letter =>
-                wordToGuess.includes(letter)
-                )}
-                inactiveLetters={incorrectLetters}
-                addGuessedLetter={addGuessedLetter}
-            />
-        </div>
-        <HangmanTextField value={textGuess?.toLowerCase() ?? ""}onChange={setTextGuess}
-        onFocus={() => {setIsFieldActive(true)
-            console.log("active!")}}
-        onBlur={() => setIsFieldActive(false)}/>
-        <button onClick={handleGuess} className= "btn">Make Guess</button>
-        <Dictionary reveal = {isLoser || isWinner} data={definitionData} />
+            <div style={{
+                maxWidth: "800px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "2rem",
+                margin: "0 auto",
+                alignItems: "center",
+                transform: "scale(0.5)", 
+                transformOrigin: "top center",
+            }}>
+                <div style={{
+                    fontSize: "2rem",
+                    textAlign: "center"
+                }}>
+                    {isWinner && "Winner! - Refresh to try again"}
+                    {isLoser && "Nice try - Refresh to try again"}
+                </div>
+    
+                <HangmanDrawing numberOfGuesses={incorrectLetters.length} />
+                <HangmanWord reveal={isLoser} guessedLetters={guessedLetters} wordToGuess={wordToGuess} />
+                
+                <div style={{ alignSelf: "stretch" }}>
+                    <Keyboard
+                        disabled={isWinner || isLoser}
+                        activeLetters={guessedLetters.filter(letter =>
+                            wordToGuess.includes(letter)
+                        )}
+                        inactiveLetters={incorrectLetters}
+                        addGuessedLetter={addGuessedLetter}
+                    />
+                </div>
+    
+                <HangmanTextField 
+                    value={textGuess?.toLowerCase() ?? ""} 
+                    onChange={setTextGuess}
+                    onFocus={() => setIsFieldActive(true)}
+                    onBlur={() => setIsFieldActive(false)}
+                />
+    
+                <button onClick={handleGuess} className="btn">Make Guess</button>
+                
+                <Dictionary reveal={isLoser || isWinner} data={definitionData} />
+            </div>
         </div>
     )
 }
 
 export default App
-
